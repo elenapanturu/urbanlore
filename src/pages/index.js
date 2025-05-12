@@ -55,13 +55,6 @@ export default function Home() {
     );
   };
 
-  const handleCheckboxChange = (event) => {
-    setFilters({
-      ...filters,
-      [event.target.name]: event.target.checked,
-    });
-  };
-
   const handleSearch = async () => {
     const query = {
       city: city,
