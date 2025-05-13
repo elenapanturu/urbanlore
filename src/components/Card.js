@@ -1,4 +1,18 @@
+import { useEffect, useState } from "react";
+import { getCoordinates } from "../../utils/geocode";
+
 export default function Card({ place, onClose }) {
+    if (!place) return null;
+    const [coordinates, setCoordinates] = useState(null);
+    useEffect(() => {
+        const fetchCoordinates = async () => {
+            const coords = await getCoordinates(place.name);
+            setCoordinates(coords);
+        };
+
+        fetchCoordinates();
+    }, [place.name]);
+
     const handleOverlayClick = () => {
         onClose();
     };
@@ -6,6 +20,10 @@ export default function Card({ place, onClose }) {
     const handleCardClick = (e) => {
         e.stopPropagation();
     };
+
+    const googleMapsUrl = coordinates
+        ? `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`
+        : null;
 
     return (
         <div
@@ -25,16 +43,16 @@ export default function Card({ place, onClose }) {
                 <img
                     src={place.image}
                     alt={place.name}
-                    className="w-full h-36 object-cover rounded-t-lg"
+                    className="w-full h-auto max-h-64 object-contain rounded-t-lg"
                 />
 
                 <div className="p-6">
                     <h2 className="text-2xl font-bold mb-1">{place.name}</h2>
-                    <p className="text-gray-600 text-sm mb-4">{place.location}</p>
-                    <p className="mb-4">{place.description}</p>
+                    <p className="text-gray-600 text-sm mb-4">{place.city + ", " + place.country}</p>
+                    <p className="mb-4">{place.story}</p>
 
                     <div className="flex gap-2 mb-4">
-                        {place.categories.map((cat, index) => (
+                        {place.categories && place.categories.map((cat, index) => (
                             <span
                                 key={index}
                                 className="bg-black text-white text-xs px-2 py-1 rounded-full"
@@ -44,18 +62,15 @@ export default function Card({ place, onClose }) {
                         ))}
                     </div>
 
-                    {place.mapEmbed && (
-                        <div className="aspect-video mt-4">
-                            <iframe
-                                src={place.mapEmbed}
-                                width="100%"
-                                height="100%"
-                                style={{ border: 0 }}
-                                allowFullScreen=""
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
-                            ></iframe>
-                        </div>
+                    {googleMapsUrl && (
+                        <a
+                            href={googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block bg-black text-white px-4 py-2 rounded-lg mt-4"
+                        >
+                            Get Directions
+                        </a>
                     )}
                 </div>
             </div>

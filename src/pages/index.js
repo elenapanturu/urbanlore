@@ -1,37 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
 import Card from "@/components/Card";
 import MiniCard from "@/components/MiniCard";
+import { getCityFromAPI } from "../../utils/geocode";
 
 //places hardcodate momentan
-const places = [
-  {
-    name: "Iconic statue where Depeche Mode shot a pic in 1988",
-    location: "Prague, Czech Republic",
-    image: "/images/prague_depeche_mode_statue.jpg",
-    description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-    categories: ["Historic", "Instagrammable"],
-    mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-  },
-  {
-    name: "Iconic statue",
-    location: "Prague, Czech Republic",
-    image: "/images/prague_depeche_mode_statue.jpg",
-    description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-    categories: ["Historic", "Instagrammable"],
-    mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-  },
-  {
-    name: "Depeche Mode shot a pic in 1988",
-    location: "Prague, Czech Republic",
-    image: "/images/prague_depeche_mode_statue.jpg",
-    description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-    categories: ["Historic", "Instagrammable"],
-    mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-  },
-]
+// const places = [
+//   {
+//     name: "Iconic statue where Depeche Mode shot a pic in 1988",
+//     location: "Prague, Czech Republic",
+//     image: "/images/prague_depeche_mode_statue.jpg",
+//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
+//     categories: ["Historic", "Instagrammable"],
+//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
+//   },
+//   {
+//     name: "Iconic statue",
+//     location: "Prague, Czech Republic",
+//     image: "/images/prague_depeche_mode_statue.jpg",
+//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
+//     categories: ["Historic", "Instagrammable"],
+//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
+//   },
+//   {
+//     name: "Depeche Mode shot a pic in 1988",
+//     location: "Prague, Czech Republic",
+//     image: "/images/prague_depeche_mode_statue.jpg",
+//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
+//     categories: ["Historic", "Instagrammable"],
+//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
+//   },
+// ]
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +49,8 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const filters = ["Instagrammable", "Food Places", "Historical Sites", "Photography Spots"];
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const toggleFilter = (filter) => {
     setSelectedFilters((prev) =>
@@ -56,12 +59,35 @@ export default function Home() {
   };
 
   const handleSearch = async () => {
-    const query = {
-      city: city,
-      filters: filters,
-    };
-    console.log(query);
+    setLoading(true);
+    const normalizedCity = await getCityFromAPI(city);
+    const response = await fetch(`/api/places?city=${normalizedCity}`);
+    const data = await response.json();
+    console.log('1', data, data.length);
+    if (data.data.length>0 && Array.isArray(data.data)) {
+      setPlaces(data.data);
+      console.log('2', data.data);
+    } else {
+      console.log('3');
+      const postResponse = await fetch(`/api/places`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ city: normalizedCity })
+      });
+
+      const postData = await postResponse.json();
+      console.log("GPT data:", postData);
+
+      // fallback-ul returnează story, nu locuri direct, deci trebuie să faci GET din nou după ce s-au inserat
+      const response = await fetch(`/api/places?city=${normalizedCity}`);
+      const data = await response.json();
+      setPlaces(data.data || []);
+    }
+    setLoading(false);
   };
+
 
   return (
     <div
@@ -113,7 +139,7 @@ export default function Home() {
         <section className="w-full max-w-3xl">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Featured Locations</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {places.map((place) => (
+            {places && places.length > 0 && places.map((place) => (
               <MiniCard key={place.name} place={place} onClick={setSelectedPlace} />
             ))}
           </div>
