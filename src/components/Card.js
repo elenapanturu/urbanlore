@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { getCoordinates } from "../../utils/geocode";
 
 export default function Card({ place, onClose }) {
@@ -40,7 +41,7 @@ export default function Card({ place, onClose }) {
                     ×
                 </button>
 
-                <img
+                <Image
                     src={place.image}
                     alt={place.name}
                     className="w-full h-auto max-h-64 object-contain rounded-t-lg"

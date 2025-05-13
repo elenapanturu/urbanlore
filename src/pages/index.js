@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import Image from "next/image";
 import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
