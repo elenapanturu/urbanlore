@@ -3,8 +3,8 @@ import Image from "next/image";
 import { getCoordinates } from "../../utils/geocode";
 
 export default function Card({ place, onClose }) {
-    if (!place) return null;
     const [coordinates, setCoordinates] = useState(null);
+
     useEffect(() => {
         const fetchCoordinates = async () => {
             const coords = await getCoordinates(place.name);
@@ -13,6 +13,8 @@ export default function Card({ place, onClose }) {
 
         fetchCoordinates();
     }, [place.name]);
+
+    if (!place) return null;
 
     const handleOverlayClick = () => {
         onClose();
@@ -45,6 +47,8 @@ export default function Card({ place, onClose }) {
                     src={place.image}
                     alt={place.name}
                     className="w-full h-auto max-h-64 object-contain rounded-t-lg"
+                    width={1200}
+                    height={675}
                 />
 
                 <div className="p-6">
