@@ -6,34 +6,6 @@ import Card from "@/components/Card";
 import MiniCard from "@/components/MiniCard";
 import { getCityFromAPI } from "../../utils/geocode";
 
-//places hardcodate momentan
-// const places = [
-//   {
-//     name: "Iconic statue where Depeche Mode shot a pic in 1988",
-//     location: "Prague, Czech Republic",
-//     image: "/images/prague_depeche_mode_statue.jpg",
-//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-//     categories: ["Historic", "Instagrammable"],
-//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-//   },
-//   {
-//     name: "Iconic statue",
-//     location: "Prague, Czech Republic",
-//     image: "/images/prague_depeche_mode_statue.jpg",
-//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-//     categories: ["Historic", "Instagrammable"],
-//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-//   },
-//   {
-//     name: "Depeche Mode shot a pic in 1988",
-//     location: "Prague, Czech Republic",
-//     image: "/images/prague_depeche_mode_statue.jpg",
-//     description: "Located in a quiet park, this statue became famous after Depeche Mode’s 1988 photo shoot...",
-//     categories: ["Historic", "Instagrammable"],
-//     mapEmbed: "https://www.google.com/maps/embed?pb=..." // optional
-//   },
-// ]
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -63,8 +35,7 @@ export default function Home() {
     const normalizedCity = await getCityFromAPI(city);
     const response = await fetch(`/api/places?city=${normalizedCity}`);
     const data = await response.json();
-    console.log('1', data, data.length);
-    if (data.data.length>0 && Array.isArray(data.data)) {
+    if (data && data.data.length>0 && Array.isArray(data.data)) {
       setPlaces(data.data);
       console.log('2', data.data);
     } else {
@@ -80,7 +51,6 @@ export default function Home() {
       const postData = await postResponse.json();
       console.log("GPT data:", postData);
 
-      // fallback-ul returnează story, nu locuri direct, deci trebuie să faci GET din nou după ce s-au inserat
       const response = await fetch(`/api/places?city=${normalizedCity}`);
       const data = await response.json();
       setPlaces(data.data || []);
