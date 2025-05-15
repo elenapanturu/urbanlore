@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --title-color: #333333;
+  --text-color: #555555;
 }
 
 /* @theme inline {
@@ -40,6 +42,84 @@ input[type="checkbox"]:checked+label {
 }
 
 .dark {
-  --bg-color: #121212;
-  --text-color: #ffffff;
+  --background: #121212;
+  --foreground: #f0f0f0;
+  --title-color: #e0e0e0;
+  --text-color: #b0b0b0;
+}
+
+a {
+  color: var(--foreground);
+}
+
+button {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+button:hover {
+  background-color: #444;
+  color: var(--background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--title-color);
+}
+
+p {
+  color: var(--text-color);
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: var(--title-color);
+}
+
+body.dark-mode p {
+  color: var(--text-color);
+}
+
+body.dark-mode a {
+  color: var(--foreground);
+}
+
+body.dark-mode button {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+body.dark-mode button:hover {
+  background-color: #444;
+}
+
+body.dark-mode button:active {
+  background-color: #444;
+}
+
+.card {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.dark .force-dark-card {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+}
+
+.force-dark-button {
+  color: #f3f4f6;
+}
+
+.dark .force-dark-button {
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }

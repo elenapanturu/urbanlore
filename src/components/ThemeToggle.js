@@ -1,27 +1,42 @@
 import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light');
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      setDark(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
+    const newTheme = dark ? 'light' : 'dark';
+    document.documentElement.classList.toggle('dark');
     localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    setDark(!dark);
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+      style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        padding: '10px 15px',
+        backgroundColor: dark ? '#fff' : '#000',
+        color: dark ? '#000' : '#fff',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        zIndex: 9999,
+      }}
     >
-      {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+      {dark ? '☀️ Light' : '🌙 Dark'}
     </button>
   );
 }

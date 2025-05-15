@@ -1,10 +1,11 @@
-import { useState} from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
 import Card from "@/components/Card";
 import MiniCard from "@/components/MiniCard";
 import { getCityFromAPI } from "../../utils/geocode";
+import toast, { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,23 +20,19 @@ const geistMono = Geist_Mono({
 export default function Home() {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [city, setCity] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const filters = ["Instagrammable", "Food Places", "Historical Sites", "Photography Spots"];
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const toggleFilter = (filter) => {
-    setSelectedFilters((prev) =>
-      prev.includes(filter) ? prev.filter((f) => f !== filter) : [...prev, filter]
-    );
-  };
-
   const handleSearch = async () => {
+    if (!city) {
+      toast.error("Off. Write a city first...");
+      return 0;
+    }
     setLoading(true);
     const normalizedCity = await getCityFromAPI(city);
     const response = await fetch(`/api/places?city=${normalizedCity}`);
     const data = await response.json();
-    if (data && data.data.length>0 && Array.isArray(data.data)) {
+    if (data && data.data.length > 0 && Array.isArray(data.data)) {
       setPlaces(data.data);
       console.log('2', data.data);
     } else {
@@ -58,7 +55,6 @@ export default function Home() {
     setLoading(false);
   };
 
-
   return (
     <div
       className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
@@ -72,6 +68,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center mb-2 text-gray-900">UrbanLore</h1>
         <p className="text-center text-lg text-gray-700 mb-6">Discover hidden gems, aesthetic alleys, and untold stories from cities around the world.</p>
         <div className="flex gap-2 mb-8">
+          <Toaster position="bottom-center" />
           <input
             type="text"
             placeholder="Enter a city..."
@@ -86,25 +83,6 @@ export default function Home() {
             Explore
           </button>
         </div>
-
-        <section className="w-full max-w-3xl">
-          <h2 className="text-2xl font-semibold mb-4">Filters</h2>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => toggleFilter(filter)}
-                className={`px-3 py-1 rounded-full border text-sm font-medium transition 
-        ${selectedFilters.includes(filter)
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-black border-gray-300 hover:bg-black hover:text-white"
-                  }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-        </section>
 
         <section className="w-full max-w-3xl">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Featured Locations</h2>

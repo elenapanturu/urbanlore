@@ -33,11 +33,11 @@ export default function Card({ place, onClose }) {
             className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-50"
             onClick={handleOverlayClick}
         >
-            <div className="bg-white w-full max-w-md rounded-xl shadow-xl overflow-hidden relative"
+            <div className="bg-white dark:bg-neutral-900 force-dark-card text-gray-900 dark:text-gray-100 w-full max-w-md rounded-xl shadow-xl overflow-hidden relative"
                 onClick={handleCardClick}
             >
                 <button
-                    className="absolute top-4 right-4 text-grey-700 text-xl font-bold hover:text-black cursor-pointer"
+                    className="absolute top-4 right-4 text-white text-xl font-bold hover:text-black cursor-pointer"
                     onClick={onClose}
                 >
                     ×
@@ -72,7 +72,7 @@ export default function Card({ place, onClose }) {
                             href={googleMapsUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block bg-black text-white px-4 py-2 rounded-lg mt-4"
+                            className="inline-block bg-black dark:bg-white force-dark-button text-white dark:text-black px-4 py-2 rounded-lg mt-4 hover:bg-gray-800 dark:hover:bg-gray-200"
                         >
                             Get Directions
                         </a>
