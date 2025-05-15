@@ -111,7 +111,7 @@ body.dark-mode button:active {
 }
 
 .dark .force-dark-card {
-  background-color: #1f2937 !important;
+  background-color: #444 !important;
   color: #f3f4f6 !important;
 }
 
