@@ -4,7 +4,7 @@ const apiKey = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
 
 export const getCityFromAPI = async (city) => {
     try {
-        const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json`, {
+        const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
             params: {
                 q: city,
                 key: apiKey,
@@ -12,21 +12,26 @@ export const getCityFromAPI = async (city) => {
             },
         });
 
-        if (response.data.results.length > 0) {
-            const normalizedCity = response.data.results[0].components.city ||
-                response.data.results[0].components.town ||
-                response.data.results[0].components.village;
+        if (response.data && response.data.results && response.data.results.length > 0) {
+            const components = response.data.results[0].components;
+            const normalizedCity = components._normalized_city || components.city || components.town || components.village;
 
-            return normalizedCity;
+            if (normalizedCity) {
+                return normalizedCity;
+            } else {
+                console.warn(`No normalized city found for "${city}". Using original input.`);
+                return city;
+            }
         } else {
-            throw new Error("City not found");
+            console.warn(`No geocoding results for "${city}".`);
+            return city;
         }
+    } catch (error) {
+        console.error('Error fetching city data:', error);
+        throw new Error('Failed to fetch city data');
     }
-    catch (error) {
-        console.error("Error fetching city data: ", error);
-        throw error;
-    }
-}
+};
+
 
 export const getCoordinates = async (place) => {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(place)}&key=${apiKey}`;

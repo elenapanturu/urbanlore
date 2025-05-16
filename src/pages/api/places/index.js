@@ -2,6 +2,7 @@ import { sendMethodNotAllowed, sendOk } from "../../../../utils/apiMethods";
 import { getCollection } from "../../../../utils/functions";
 import { COLLECTION_NAME } from "./constants";
 import openai from "../../../../lib/openai";
+import { fetchImageUrl, downloadAndSaveImage } from "../../../../utils/downloadImage";
 
 const getPlaces = async (city) => {
     const collection = await getCollection(COLLECTION_NAME);
@@ -39,18 +40,20 @@ export default async function handler(req, res) {
             case "POST":
                 {
                     const { city } = body;
-
                     if (!city) {
                         return res.status(400).json({ message: "City is required" });
                     }
+                    const existingPlaces = await getPlaces(city);
 
-                    const prompt = `Give me 5 interesting, obscure, or unusual places to visit in ${city}. 
+
+                    const prompt = `Give me 15 interesting, obscure, or unusual places to visit in ${city}. 
                                     For each place, provide the following fields in a JSON array of objects:
                                             - name: the name of the place
-                                            - story: a short description
+                                            - story: a 5 to 8 lines description/story/legend of the place
                                             - city: "${city}"
                                             - country: the country the city is in
-                                            - images: an empty array []
+                                            - description: a cool name given to the place based on the story
+                                            - image: a black and white image of the place
                                     The result should be a valid JSON array only. No explanation, no extra text.
 
                                             Example:
@@ -60,7 +63,8 @@ export default async function handler(req, res) {
                                                     "story": "A small museum with a captivating history in shadows blah blah",
                                                     "city": "Berlin",
                                                     "country": "Germany",
-                                                    "images": []
+                                                    "description": "The museum of the shadows.."
+                                                    "image": "images/name_of_the_image.jpg"
                                                 },
                                                 ...
                                             ]`;
@@ -81,11 +85,29 @@ export default async function handler(req, res) {
                     }
 
 
-                    for (const place of places) {
+                    const existingNames = new Set(existingPlaces.map((p) => p.name.toLowerCase()));
+
+                    const uniqueNewPlaces = places.filter(
+                        (place) => !existingNames.has(place.name.toLowerCase())
+                    );
+
+                    for (const place of uniqueNewPlaces) {
+                        const imageUrl = await fetchImageUrl(`${place.name} ${place.city}`);
+                        const safeFileName = `${place.city}-${place.name}`
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^a-z0-9-]/g, "");
+                        const localPath = imageUrl
+                            ? await downloadAndSaveImage(imageUrl, `${safeFileName}.jpg`)
+                            : "/images/default.jpg";
+
+                        place.image = localPath;
+
                         await createPlace(place);
                     }
 
-                    return sendOk(res, places);
+                    const finalPlaces = await getPlaces(city);
+                    return sendOk(res, finalPlaces);
                 }
             default:
                 return sendMethodNotAllowed(res, "Method Not Allowed");

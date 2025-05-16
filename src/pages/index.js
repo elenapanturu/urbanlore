@@ -27,33 +27,59 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (!city.trim()) {
+    if (!city || !city.trim()) {
       toast.error(t.emptySearchMessage);
       return;
     }
+    console.log("0 - User input city:", city);
+
     setLoading(true);
-    const normalizedCity = await getCityFromAPI(city);
-    const response = await fetch(`/api/places?city=${normalizedCity}`);
-    const data = await response.json();
 
-    if (data && data.data.length > 0 && Array.isArray(data.data)) {
-      setPlaces(data.data);
-    } else {
-      const postResponse = await fetch(`/api/places`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ city: normalizedCity }),
-      });
-
-      await postResponse.json();
-
-      const retryResponse = await fetch(`/api/places?city=${normalizedCity}`);
-      const retryData = await retryResponse.json();
-      setPlaces(retryData.data || []);
+    let normalizedCity;
+    try {
+      normalizedCity = await getCityFromAPI(city);
+      console.log("1 - Normalized city:", normalizedCity);
+    } catch (error) {
+      toast.error("Could not normalize the city name. Please try again.");
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+
+    if (!normalizedCity) {
+      toast.error("Invalid city name. Please try a different one.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/places?city=${encodeURIComponent(normalizedCity)}`);
+      const data = await response.json();
+
+      if (data && Array.isArray(data.data) && data.data.length > 0) {
+        setPlaces(data.data);
+      } else {
+        console.log("2 - No places found, requesting POST to generate places for:", normalizedCity);
+        const postResponse = await fetch(`/api/places`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ city: normalizedCity }),
+        });
+
+        const postData = await postResponse.json();
+        console.log("3 - POST response data:", postData);
+
+        const retryResponse = await fetch(`/api/places?city=${encodeURIComponent(normalizedCity)}`);
+        const retryData = await retryResponse.json();
+        setPlaces(retryData.data || []);
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching places. Please try again.");
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

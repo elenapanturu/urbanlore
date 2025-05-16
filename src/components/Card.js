@@ -42,14 +42,15 @@ export default function Card({ place, onClose }) {
                 >
                     ×
                 </button>
-
-                <Image
-                    src={place.image}
-                    alt={place.name}
-                    className="w-full h-auto max-h-64 object-contain rounded-t-lg"
-                    width={1200}
-                    height={675}
-                />
+                {place.image && place.image.length && place.image.length > 0 ? (
+                    <Image
+                        src={place.image}
+                        alt={place.name}
+                        className="w-full h-auto max-h-64 object-contain rounded-t-lg"
+                        width={1200}
+                        height={675}
+                    />
+                ) : (<></>)}
 
                 <div className="p-6">
                     <h2 className="text-2xl font-bold mb-1">{place.name}</h2>

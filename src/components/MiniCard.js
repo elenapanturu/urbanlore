@@ -7,12 +7,15 @@ export default function MiniCard({ place, onClick }) {
             onClick={() => onClick(place)}
         >
             <div className="relative w-full h-36 rounded-lg overflow-hidden">
-                <Image
-                    src={place.image}
-                    alt={place.name}
-                    layout="fill"
-                    objectFit="cover"
-                />
+                {place.image && place.image.length && place.image.length > 0 ? (
+                    <Image
+                        src={place.image}
+                        alt={place.name}
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                ) : <></>}
+
             </div>
             <h3 className="font-bold mt-2 text-lg">{place.description}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
