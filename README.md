@@ -23,6 +23,10 @@ cd urbanlore
 npm install
 npm run dev
 
+![UrbanLore-light](https://github.com/user-attachments/assets/abffddae-46c3-4076-831d-67c5e7fc2d6c)
+
+
+![image](https://github.com/user-attachments/assets/49191982-faf6-4755-b80b-4ce9e40dfdf6)
 
 
 
