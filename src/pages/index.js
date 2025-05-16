@@ -1,11 +1,14 @@
 import { useState } from "react";
-import Image from "next/image";
-import Head from 'next/head';
+import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import Card from "@/components/Card";
 import MiniCard from "@/components/MiniCard";
 import { getCityFromAPI } from "../../utils/geocode";
 import toast, { Toaster } from "react-hot-toast";
+import content from "@/data/content.json";
+
+const lang = "en";
+const t = content[lang];
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,23 +27,24 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (!city) {
-      toast.error("Off. Write a city first...");
-      return 0;
+    if (!city.trim()) {
+      toast.error(t.emptySearchMessage);
+      return;
     }
     setLoading(true);
     const normalizedCity = await getCityFromAPI(city);
     const response = await fetch(`/api/places?city=${normalizedCity}`);
     const data = await response.json();
+
     if (data && data.data.length > 0 && Array.isArray(data.data)) {
       setPlaces(data.data);
     } else {
       const postResponse = await fetch(`/api/places`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ city: normalizedCity })
+        body: JSON.stringify({ city: normalizedCity }),
       });
 
       await postResponse.json();
@@ -54,28 +58,32 @@ export default function Home() {
 
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className={`${geistSans.className} ${geistMono.className} min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]`}
     >
       <Head>
         <title>UrbanLore</title>
         <meta name="description" content="Find hidden, obscure, and aesthetic places in any city." />
       </Head>
 
-      <main className="flex flex-col gap-[32px] row-start-2 items-center max-w-3xl w-full mx-auto">
-        <div className="text-center px-4">
-          <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-gray-100">
-            UrbanLore
-          </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-            Discover hidden gems, aesthetic alleys, and untold stories from cities around the world.
-          </p>
+      <main className="flex-grow flex flex-col gap-6 items-center max-w-3xl w-full mx-auto px-4 pt-6 shadow-sm">
+
+        <div className="w-full sticky top-0 z-20 bg-white dark:bg-neutral-900 pt-8 pb-4 sticky-header transition-colors duration-300">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-1 text-gray-900 dark:text-gray-100">{t.title}</h1>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+              {t.subtitle}
+            </p>
+            <p className="text-xs italic text-gray-500 dark:text-gray-400 max-w-md mx-auto -mt-1">
+              {t.tagline}
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 w-full px-4">
+        <div className="flex flex-col sm:flex-row gap-2 w-full">
           <Toaster position="bottom-center" />
           <input
             type="text"
-            placeholder="Enter a city..."
+            placeholder={t.placeholder}
             value={city}
             onChange={(e) => setCity(e.target.value)}
             onKeyDown={(e) => {
@@ -92,43 +100,56 @@ export default function Home() {
             className="bg-black text-white px-6 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-800 sm:w-auto w-full disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading}
           >
-            {loading ? "Loading..." : "Explore"}
+            {loading ? t.loading : t.buttonExplore}
           </button>
         </div>
 
+        <div className="flex flex-wrap gap-3 justify-center mb-2">
+          {["Paris", "Tokyo", "Lisbon", "New York", "Bucharest", "Barcelona"].map((preset) => (
+            <button
+              key={preset}
+              onClick={() => {
+                setCity(preset);
+              }}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-sm rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition"
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
+
         <section className="w-full">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-100 text-center">
-            Featured Locations
-          </h2>
+
 
           {places && places.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {places.map((place) => (
-                <MiniCard key={place.name} place={place} onClick={setSelectedPlace} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-28 px-6 rounded-xl bg-gradient-to-b from-gray-100 to-white dark:from-gray-800 dark:to-gray-900 text-gray-500 dark:text-gray-400 select-none shadow-inner">
-              <div className="flex items-center justify-center w-24 h-24 mb-6 rounded-full bg-gray-200/60 dark:bg-gray-700/40">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-gray-400 dark:text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L15 12l-5.25-5" />
-                </svg>
+            <>
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 text-center">
+                {t.featured}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {places.map((place) => (
+                  <MiniCard key={place.name} place={place} onClick={setSelectedPlace} />
+                ))}
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">
-                No locations yet
-              </h3>
-              <p className="text-center text-sm italic text-gray-500 dark:text-gray-400 max-w-md leading-relaxed">
-                Enter a city above and let UrbanLore uncover its hidden beauty — alleys, rooftops, and stories waiting to be explored.
-              </p>
-            </div>
-
+            </>
+          ) : (
+            <section className="w-full text-center px-2 mt-4">
+              <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">{t.howItWorksTitle}</h2>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center text-gray-600 dark:text-gray-400 text-sm">
+                <div className="flex-1">
+                  <h3 className="font-semibold mb-1">{t.steps[0].title}</h3>
+                  <p>{t.steps[0].desc}</p>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold mb-1">{t.steps[1].title}</h3>
+                  <p>{t.steps[1].desc}</p>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold mb-1">{t.steps[2].title}</h3>
+                  <p>{t.steps[2].desc}</p>
+                </div>
+              </div>
+            </section>
           )}
         </section>
 
@@ -137,9 +158,9 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="text-center text-sm text-gray-500 mt-10">
-        <p>&copy; 2025 UrbanLore. Proiect Cloud Computing - Panturu Elena 1133</p>
+      <footer className="text-center text-sm text-gray-400 dark:text-gray-500 py-6">
+        <p>&copy; 2025 UrbanLore. Cloud Computing - Panțuru Elena 1133.</p>
       </footer>
-    </div >
+    </div>
   );
 }

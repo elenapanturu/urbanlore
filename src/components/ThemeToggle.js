@@ -1,4 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Geist, Geist_Mono } from "next/font/google";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -22,6 +33,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      className={`${geistSans.className} ${geistMono.className}`}
       onClick={toggleTheme}
       style={{
         position: 'fixed',

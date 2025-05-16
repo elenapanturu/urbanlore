@@ -1,0 +1,52 @@
+{
+    "en": {
+        "title": "UrbanLore",
+        "subtitle": "Discover hidden gems and untold stories from cities around the world.",
+        "tagline": "Not just places — stories whispered by the city walls.",
+        "placeholder": "Enter a city...",
+        "buttonExplore": "Explore",
+        "loading": "Loading...",
+        "featured": "Featured Locations",
+        "howItWorksTitle": "How it works",
+        "steps": [
+            {
+                "title": "1. Search a city",
+                "desc": "Type any city name and let UrbanLore check for local gems."
+            },
+            {
+                "title": "2. View curated results",
+                "desc": "We show hand-picked aesthetic, unique, and obscure locations."
+            },
+            {
+                "title": "3. Explore & enjoy",
+                "desc": "Open directions, read hidden stories, and explore your city differently."
+            }
+        ],
+        "emptySearchMessage": "Off.. Write a city first."
+    },
+    "ro": {
+        "title": "UrbanLore",
+        "subtitle": "Descoperă comori ascunse și povești nespuse din orașele lumii.",
+        "tagline": "Nu doar locuri — povești șoptite de zidurile orașului.",
+        "placeholder": "Scrie un oraș...",
+        "buttonExplore": "Explorează",
+        "loading": "Se încarcă...",
+        "featured": "Locații recomandate",
+        "howItWorksTitle": "Cum funcționează",
+        "steps": [
+            {
+                "title": "1. Caută un oraș",
+                "desc": "Scrie un oraș și UrbanLore va căuta locuri speciale."
+            },
+            {
+                "title": "2. Vezi rezultatele",
+                "desc": "Îți afișăm locuri unice și estetice selectate cu grijă."
+            },
+            {
+                "title": "3. Explorează cu drag",
+                "desc": "Deschide direcții, citește povești și descoperă orașul altfel."
+            }
+        ],
+        "emptySearchMessage": "Off.. Scrie numele unui oraș mai întâi."
+    }
+}
