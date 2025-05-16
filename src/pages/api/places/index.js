@@ -97,11 +97,15 @@ export default async function handler(req, res) {
                             .toLowerCase()
                             .replace(/\s+/g, "-")
                             .replace(/[^a-z0-9-]/g, "");
-                        const localPath = imageUrl
-                            ? await downloadAndSaveImage(imageUrl, `${safeFileName}.jpg`)
-                            : "/images/default.jpg";
+                        if (process.env.NODE_ENV === "development") {
+                            const localPath = imageUrl
+                                ? await downloadAndSaveImage(imageUrl, `${safeFileName}.jpg`)
+                                : "/images/default.jpg";
 
-                        place.image = localPath;
+                            place.image = localPath;
+                        } else {
+                            place.image = imageUrl || "/images/default.jpg";
+                        }
 
                         await createPlace(place);
                     }
