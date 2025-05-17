@@ -1,6 +1,8 @@
 **UrbanLore** este o aplicație web creată cu Next.js, care ne ajută să descoperim locuri ascunse, estetice sau neobișnuite din orașe din întreaga lume. Cu ajutorul inteligenței artificiale (un API de la OpenAI), aplicația centralizeză povești, legende și imagini pentru aceste locuri.
 
-## Live demo: https://urban-lore.vercel.app
+## Live: https://urban-lore.vercel.app
+
+## YouTube demo: 
 
 ## Documentație: https://docs.google.com/document/d/1n8BSXkBUU7KtMk_obOGgO0kSvh15_MpaCYxXQe4d1yM/edit?usp=sharing
 
