@@ -13,7 +13,7 @@ function validatePassword(password) {
 
 const getUsers = async () => {
   const collection = await getCollection(COLLECTION_NAME);
-  return await collection.find({}, { projection: { password: 0 } }).toArray(); // Fără parole în rezultat
+  return await collection.find({}, { projection: { password: 0 } }).toArray();
 };
 
 const createUser = async (user) => {
@@ -27,8 +27,6 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case "GET":
-        // Opțional: returnează lista de utilizatori (fără parole)
-        // Poți să faci un check dacă userul e admin aici
         const users = await getUsers();
         return sendOk(res, users);
 
@@ -45,17 +43,14 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: "Parola trebuie să aibă minim 5 caractere" });
         }
 
-        // Verifică dacă email există deja
         const collection = await getCollection(COLLECTION_NAME);
         const existingUser = await collection.findOne({ email });
         if (existingUser) {
           return res.status(400).json({ error: "Emailul este deja folosit" });
         }
 
-        // Hash parola
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Creează user nou în baza de date
         await createUser({ email, password: hashedPassword });
 
         return res.status(201).json({ message: "Înregistrare reușită" });
