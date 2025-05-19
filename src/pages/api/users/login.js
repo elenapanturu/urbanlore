@@ -12,20 +12,20 @@ export default async function handler(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email și parola sunt obligatorii" });
+    return res.status(400).json({ error: "email and password are manadatory" });
   }
 
   const collection = await getCollection(COLLECTION_NAME);
   const user = await collection.findOne({ email });
 
   if (!user) {
-    return res.status(401).json({ error: "Email sau parola incorecte" });
+    return res.status(401).json({ error: "wrong email or password" });
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    return res.status(401).json({ error: "Email sau parola incorecte" });
+    return res.status(401).json({ error: "wrong email or password" });
   }
 
   const token = jwt.sign(

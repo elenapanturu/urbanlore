@@ -1,6 +1,6 @@
 import { sendMethodNotAllowed, sendOk } from "../../../../utils/apiMethods";
 import { getCollection } from "../../../../utils/functions";
-import {COLLECTION_NAME} from "./constants"
+import { COLLECTION_NAME } from "./constants"
 import bcrypt from "bcryptjs";
 
 
@@ -34,32 +34,32 @@ export default async function handler(req, res) {
         const { email, password } = body;
 
         if (!email || !password) {
-          return res.status(400).json({ error: "Email și parola sunt obligatorii" });
+          return res.status(400).json({ error: "email and password are mandatory" });
         }
         if (!validateEmail(email)) {
-          return res.status(400).json({ error: "Email invalid" });
+          return res.status(400).json({ error: "invalid email" });
         }
         if (!validatePassword(password)) {
-          return res.status(400).json({ error: "Parola trebuie să aibă minim 5 caractere" });
+          return res.status(400).json({ error: "password must be at least 5 characters long" });
         }
 
         const collection = await getCollection(COLLECTION_NAME);
         const existingUser = await collection.findOne({ email });
         if (existingUser) {
-          return res.status(400).json({ error: "Emailul este deja folosit" });
+          return res.status(400).json({ error: "email is already used" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await createUser({ email, password: hashedPassword });
 
-        return res.status(201).json({ message: "Înregistrare reușită" });
+        return res.status(201).json({ message: "successful registration" });
 
       default:
         return sendMethodNotAllowed(res, "Method Not Allowed");
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Eroare internă server", details: error.message });
+    return res.status(500).json({ error: "internal server error", details: error.message });
   }
 }
