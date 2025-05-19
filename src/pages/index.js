@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import Card from "@/components/Card";
@@ -6,6 +6,8 @@ import MiniCard from "@/components/MiniCard";
 import { getCityFromAPI } from "../../utils/geocode";
 import toast, { Toaster } from "react-hot-toast";
 import content from "@/data/content.json";
+import AuthButtons from "@/components/AuthButtons"
+import { jwtDecode } from "jwt-decode";
 
 const lang = "en";
 const t = content[lang];
@@ -25,6 +27,33 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded); // aici ai emailul, id-ul etc.
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setUser(null);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+      } catch (error) {
+        console.log("Token invalid sau expirat");
+      }
+    } else {
+      console.log("Userul nu este logat");
+    }
+  }, []);
 
   const handleSearch = async () => {
     if (!city || !city.trim()) {
@@ -94,6 +123,7 @@ export default function Home() {
       <main className="flex-grow flex flex-col gap-6 items-center max-w-3xl w-full mx-auto px-4 pt-6 shadow-sm">
 
         <div className="w-full sticky top-0 z-20 bg-white dark:bg-neutral-900 pt-8 pb-4 sticky-header transition-colors duration-300">
+          <AuthButtons />
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-1 text-gray-900 dark:text-gray-100">{t.title}</h1>
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
@@ -154,7 +184,7 @@ export default function Home() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {places.map((place) => (
-                  <MiniCard key={place.name} place={place} onClick={setSelectedPlace} />
+                  <MiniCard key={place.name} place={place} onClick={setSelectedPlace} user={user} />
                 ))}
               </div>
             </>

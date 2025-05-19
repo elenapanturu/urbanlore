@@ -13,6 +13,16 @@ export async function fetchImageUrl(query) {
     return data.hits?.[0]?.largeImageURL || null;
 }
 
+export async function isValidImageUrl(url) {
+    try {
+        const res = await fetch(url, { method: "HEAD" });
+        return res.ok;
+    } catch (error) {
+        console.error("Error validating image URL:", url, error);
+        return false;
+    }
+}
+
 export async function downloadAndSaveImage(imageUrl, filename) {
     const res = await fetch(imageUrl);
     const buffer = await res.buffer();
