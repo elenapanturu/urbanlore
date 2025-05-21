@@ -18,19 +18,29 @@
 - căutare pe baza orașului introdus a unor locuri interesante de vizitat
 - dacă orașul nu se află în baza de date, este găsit cu ajutorul AI-ului
 - sunt prezentate rezultatele prin nume, descriere, imagine
-- există un buton care te redirectionează către Google Maps către adresa locației
+- există un buton care te redirecționează către Google Maps către adresa locației
+- opțiune de register/login pentru a putea vizualiza ratingul locațiilor și a oferi acestora like/dislike
 - există dark/light mode, responsive website
 
 ## Instalare & setup
-git clone https://github.com/your-username/urbanlore.git
-cd urbanlore
-npm install
-npm run dev
+1. git clone https://github.com/your-username/urbanlore.git
+2. cd urbanlore
+3. npm install
+4. npm run dev
 
 ![UrbanLore-light](https://github.com/user-attachments/assets/abffddae-46c3-4076-831d-67c5e7fc2d6c)
 
-
 ![image](https://github.com/user-attachments/assets/49191982-faf6-4755-b80b-4ce9e40dfdf6)
+
+![UrbanLore-search=Lisbon](https://github.com/user-attachments/assets/9b902a20-844b-4136-875a-e9bff613b503)
+
+![UrbanLore-form-login](https://github.com/user-attachments/assets/b28a7cd3-1a75-461b-8d6f-d0fc6726c54b)
+
+![UrbanLore-loggedin page](https://github.com/user-attachments/assets/bc51c5f3-152f-4a5e-abbf-c23f3328406b)
+
+
+
+
 
 
 
