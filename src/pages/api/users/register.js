@@ -1,4 +1,4 @@
-import { sendMethodNotAllowed, sendOk } from "../../../../utils/apiMethods";
+import { sendBadRequest, sendMethodNotAllowed, sendOk } from "../../../../utils/apiMethods";
 import { getCollection } from "../../../../utils/functions";
 import { COLLECTION_NAME } from "./constants"
 import bcrypt from "bcryptjs";
@@ -34,19 +34,19 @@ export default async function handler(req, res) {
         const { email, password } = body;
 
         if (!email || !password) {
-          return res.status(400).json({ error: "email and password are mandatory" });
+          return sendBadRequest(res, "email and password are mandatory");
         }
         if (!validateEmail(email)) {
-          return res.status(400).json({ error: "invalid email" });
+          return sendBadRequest(res, "invalid email");
         }
         if (!validatePassword(password)) {
-          return res.status(400).json({ error: "password must be at least 5 characters long" });
+          return sendBadRequest(res, "password must be at least 5 characters long");
         }
 
         const collection = await getCollection(COLLECTION_NAME);
         const existingUser = await collection.findOne({ email });
         if (existingUser) {
-          return res.status(400).json({ error: "email is already used" });
+          return sendBadRequest(res, "email is already used");
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);

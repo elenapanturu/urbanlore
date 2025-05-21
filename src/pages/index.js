@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 
 const lang = "en";
 const t = content[lang];
+const currentYear = new Date().getFullYear();
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,27 +32,17 @@ export default function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token || token.trim().split(".").length !== 3) {
+      console.warn("Token is missing or malformed.");
+    }
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser(decoded); // aici ai emailul, id-ul etc.
+        setUser(decoded);
       } catch (error) {
         console.error("Invalid token:", error);
         setUser(null);
       }
-    }
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-      } catch (error) {
-        console.log("Token invalid sau expirat");
-      }
-    } else {
-      console.log("Userul nu este logat");
     }
   }, []);
 
@@ -123,7 +114,7 @@ export default function Home() {
       <main className="flex-grow flex flex-col gap-6 items-center max-w-3xl w-full mx-auto px-4 pt-6 shadow-sm">
 
         <div className="w-full sticky top-0 z-20 bg-white dark:bg-neutral-900 pt-8 pb-4 sticky-header transition-colors duration-300">
-          <AuthButtons />
+          <AuthButtons lang={lang} />
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-1 text-gray-900 dark:text-gray-100">{t.title}</h1>
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
@@ -210,12 +201,12 @@ export default function Home() {
         </section>
 
         {selectedPlace && (
-          <Card place={selectedPlace} onClose={() => setSelectedPlace(null)} />
+          <Card place={selectedPlace} onClose={() => setSelectedPlace(null)} lang={lang} />
         )}
       </main>
 
       <footer className="text-center text-sm text-gray-400 dark:text-gray-500 py-6">
-        <p>&copy; 2025 UrbanLore. Cloud Computing - Panțuru Elena 1133.</p>
+        <p>&copy; {currentYear} {t.footerText}</p>
       </footer>
     </div>
   );

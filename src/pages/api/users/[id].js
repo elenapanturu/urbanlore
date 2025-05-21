@@ -1,3 +1,4 @@
+import { sendBadRequest, sendMethodNotAllowed, sendNotFound, sendOk } from "../../../../utils/apiMethods";
 import { getCollection } from "../../../../utils/functions";
 import { COLLECTION_NAME } from "./constants";
 import { ObjectId } from "mongodb";
@@ -13,18 +14,18 @@ export default async function handler(req, res) {
 
   if (method === "GET") {
     if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
+      return sendBadRequest(res, "User ID is required");
     }
     try {
       const user = await getUserById(id);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return sendNotFound(res, "User not found");
       }
       return res.status(200).json(user);
     } catch (error) {
       return res.status(500).json({ message: "Server error", error: error.message });
     }
   } else {
-    return res.status(405).json({ message: "Method not allowed" });
+    return sendMethodNotAllowed(res, "Method not allowed");
   }
 }

@@ -1,9 +1,10 @@
 import { getCollection } from "../../../../utils/functions";
 import { COLLECTION_NAME } from "./constants";
+import { sendMethodNotAllowed } from "../../../../utils/apiMethods";
 
 const getUsers = async () => {
   const collection = await getCollection(COLLECTION_NAME);
-  return await collection.find({}).toArray(); 
+  return await collection.find({}).toArray();
 };
 
 export default async function handler(req, res) {
@@ -15,6 +16,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: "Server error", error: error.message });
     }
   } else {
-    return res.status(405).json({ message: "Method not allowed" });
+    return sendMethodNotAllowed(res, "Method Not Allowed");
   }
 }

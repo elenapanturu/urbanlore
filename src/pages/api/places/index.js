@@ -1,4 +1,4 @@
-import { sendMethodNotAllowed, sendOk } from "../../../../utils/apiMethods";
+import { sendMethodNotAllowed, sendOk, sendBadRequest } from "../../../../utils/apiMethods";
 import { getCollection } from "../../../../utils/functions";
 import { COLLECTION_NAME } from "./constants";
 import openai from "../../../../lib/openai";
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
                 const { city } = query;
 
                 if (!city) {
-                    return res.status(400).json({ message: "Missing city parameter" });
+                    return sendBadRequest(res, "Missing city parameter");
                 }
 
                 const result = await getPlaces(city);
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
             case "POST": {
                 const { city } = body;
                 if (!city) {
-                    return res.status(400).json({ message: "City is required" });
+                    return sendBadRequest(res, "City is required");
                 }
 
                 const existingPlaces = await getPlaces(city);

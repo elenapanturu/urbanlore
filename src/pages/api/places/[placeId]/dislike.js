@@ -1,3 +1,4 @@
+import { sendMethodNotAllowed, sendBadRequest } from "../../../../../utils/apiMethods";
 import { ObjectId } from "mongodb";
 import { getCollection } from "../../../../../utils/functions";
 
@@ -6,11 +7,11 @@ export default async function handler(req, res) {
     const { userId } = req.body;
 
     if (req.method !== "POST") {
-        return res.status(405).json({ message: "Method not allowed" });
+        return sendMethodNotAllowed(res, "Method not allowed");
     }
 
     if (!placeId || !userId) {
-        return res.status(400).json({ message: "Missing placeId or userId" });
+        return sendBadRequest(res, "Missing placeId or userId" );
     }
 
     try {
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
         const place = await collection.findOne({ _id: objectPlaceId });
 
         if (!place) {
-            return res.status(404).json({ message: "Place not found" });
+            return sendBadRequest(res, "Place not found" );
         }
 
         const existingVote = place.voters?.find(v => v.userId === userId);

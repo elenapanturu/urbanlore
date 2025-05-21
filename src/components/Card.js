@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getCoordinates } from "../../utils/geocode";
+import content from "@/data/content.json";
 
-export default function Card({ place, onClose }) {
+export default function Card({ place, onClose, lang }) {
+    const t = content[lang];
     const [coordinates, setCoordinates] = useState(null);
 
     useEffect(() => {
@@ -75,7 +77,7 @@ export default function Card({ place, onClose }) {
                             rel="noopener noreferrer"
                             className="inline-block bg-black dark:bg-white force-dark-button text-white dark:text-black px-4 py-2 rounded-lg mt-4 hover:bg-gray-800 dark:hover:bg-gray-200"
                         >
-                            Get Directions
+                            {t.textGetDirections}
                         </a>
                     )}
                 </div>

@@ -1,7 +1,9 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
+import content from "../data/content.json";
 
-export default function AuthForm({ mode = "login", onClose, geistSans, geistMono }) {
+export default function AuthForm({ mode = "login", onClose, geistSans, geistMono, lang }) {
+  const t = content[lang];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -36,12 +38,12 @@ export default function AuthForm({ mode = "login", onClose, geistSans, geistMono
     let valid = true;
 
     if (!validateEmail(email)) {
-      setEmailError("invalid email");
+      setEmailError(t.errorMessageEmail);
       valid = false;
     }
 
     if (!validatePassword(password)) {
-      setPasswordError("the password must be at least 5 characters long");
+      setPasswordError(t.errorMessagePassword);
       valid = false;
     }
 
@@ -59,17 +61,17 @@ export default function AuthForm({ mode = "login", onClose, geistSans, geistMono
       const data = await res.json();
 
       if (res.ok) {
-        setMessage(isRegister ? "registration successful! you can now login." : "login successful!");
+        setMessage(isRegister ? t.successMessageRegister : t.successMessageLogin);
         if (!isRegister) {
           loginUser(data.token);
           onClose();
           window.location.reload();
         }
       } else {
-        setMessage(data.error || "something went wrong.");
+        setMessage(data.error || t.errorMessageDefault);
       }
     } catch {
-      setMessage("network error.");
+      setMessage(t.errorMessageNetwork);
     }
   }
 
@@ -126,7 +128,7 @@ export default function AuthForm({ mode = "login", onClose, geistSans, geistMono
             letterSpacing: "0.05em",
           }}
         >
-          {isRegister ? "create account" : "welcome back"}
+          {isRegister ? t.textAuthFormCreateAccount : t.textAuthFormConnect}
         </h2>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
@@ -237,8 +239,8 @@ export default function AuthForm({ mode = "login", onClose, geistSans, geistMono
           }}
         >
           {isRegister
-            ? "already have an account? login"
-            : "don't have an account? register"}
+            ? t.textAuthFormSwitchToLogin
+            : t.textAuthFormSwitchToRegister}
         </p>
 
         {message && (

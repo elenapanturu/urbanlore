@@ -22,7 +22,23 @@
                 "desc": "Open directions, read hidden stories, and explore your city differently."
             }
         ],
-        "emptySearchMessage": "Off.. Write a city first."
+        "textGetDirections": "Get Directions",
+        "emptySearchMessage": "Off.. Write a city first.",
+        "textLoggedIn": "logged in",
+        "textLogOut": "logout",
+        "textLoginButton": "login",
+        "textRegisterButton": "register",
+        "textAuthFormCreateAccount": "create account",
+        "textAuthFormConnect": "welcome back",
+        "textAuthFormSwitchToLogin": "already have an account? login",
+        "textAuthFormSwitchToRegister": "don't have an account? register",
+        "errorMessageDefault": "something went wrong.",
+        "errorMessageNetwork": "network error.",
+        "errorMessageEmail": "invalid email",
+        "errorMessagePassword": "the password must be at least 5 characters long",
+        "successMessageRegister": "registration successful! you can now login.",
+        "successMessageLogin": "login successful!",
+        "footerText": "UrbanLore. Cloud Computing - Panțuru Elena 1133."
     },
     "ro": {
         "title": "UrbanLore",
@@ -47,6 +63,22 @@
                 "desc": "Deschide direcții, citește povești și descoperă orașul altfel."
             }
         ],
-        "emptySearchMessage": "Off.. Scrie numele unui oraș mai întâi."
+        "emptySearchMessage": "Off.. Scrie numele unui oraș mai întâi.",
+        "textGetDirections": "Get Directions",
+        "textLoggedIn": "logged in",
+        "textLogOut": "logout",
+        "textLoginButton": "login",
+        "textRegisterButton": "register",
+        "textAuthFormCreateAccount": "creează cont",
+        "textAuthFormConnect": "bine-ai revenit",
+        "textAuthFormSwitchToLogin": "ai deja cont? login",
+        "textAuthFormSwitchToRegister": "nu ai cont? înregistrează-te!",
+        "errorMessageDefault": "ceva nu a funcționat.",
+        "errorMessageNetwork": "network error.",
+        "errorMessageEmail": "email nevalid",
+        "errorMessagePassword": "parola trebuie să aibă minim 5 caractere",
+        "successMessageRegister": "înregistrare cu succes! poți să te conectezi.",
+        "successMessageLogin": "conectare cu succes!",
+        "footerText": "UrbanLore. Cloud Computing - Panțuru Elena 1133."
     }
 }
