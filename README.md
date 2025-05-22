@@ -2,7 +2,7 @@
 
 ## Live: https://urban-lore.vercel.app
 
-## YouTube demo: 
+## YouTube demo: https://www.youtube.com/watch?v=a_oqKnpLxMM
 
 ## Documentație: https://docs.google.com/document/d/1n8BSXkBUU7KtMk_obOGgO0kSvh15_MpaCYxXQe4d1yM/edit?usp=sharing
 
